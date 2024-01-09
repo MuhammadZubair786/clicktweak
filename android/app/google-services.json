@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "254770784714",
+    "project_id": "clicktwea",
+    "storage_bucket": "clicktwea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254770784714:android:d2a44e36afd6e811970733",
+        "android_client_info": {
+          "package_name": "com.example.clicktwaek"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254770784714-p02pqgrbk20iu6h25c44qehoggni4al7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.clicktwaek",
+            "certificate_hash": "f4eedfcef35c129dcfddd6fce44f4b336ffe775b"
+          }
+        },
+        {
+          "client_id": "254770784714-vq12nmlnjcav6cue2n8ppas0g0dl2t06.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAP8QsWIpUdCNf9CzQDlsXqYDq7Dmg3ETw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254770784714-vq12nmlnjcav6cue2n8ppas0g0dl2t06.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

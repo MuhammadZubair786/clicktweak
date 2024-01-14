@@ -7,6 +7,7 @@ import 'package:clicktwaek/feature/withdraw/presentation/pages/witdraw.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../config/page route/detail/route_name.dart';
 import '../../../../../constants/export.dart';
@@ -20,6 +21,7 @@ class NavDrawer extends StatefulWidget {
 }
 
 class _NavDrawerState extends State<NavDrawer> {
+   final String url = "https://chat.whatsapp.com/Gwq6wm8uiQ2H0T4SYmvtt3";
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -83,12 +85,22 @@ class _NavDrawerState extends State<NavDrawer> {
               title: 'Language '),
           Divider(color: Appcolors.blackColor),
           const AppText(
+          
               text: 'Communicate ', size: 14, fontweight: FontWeight.w500),
           SideBarInfo(
               icon: Icon(Icons.person_add_alt_1, size: 25.sp),
               title: 'Invite friends',
               ontap: () => Navigator.pushNamed(context, RouteName.refer)),
           SideBarInfo(
+            ontap: () async {
+          if (await canLaunch(url)) {
+            await launch(url);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Could not launch $url')),
+            );
+          }
+        },
               icon: Icon(Icons.people_alt, size: 25.sp), title: 'Community '),
           SideBarInfo(
               icon: Icon(Icons.star_rounded, size: 25.sp), title: 'Rate us '),

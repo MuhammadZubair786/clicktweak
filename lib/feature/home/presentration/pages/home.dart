@@ -12,7 +12,8 @@ import '../src/home_exports.dart';
 import '../src/widgets/navigationDrawer.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+    final GlobalKey<ScaffoldState> scaffoldKey;
+   HomePage({super.key,required this.scaffoldKey});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -85,103 +86,107 @@ class _HomePageState extends State<HomePage> {
     final size = MediaQuery.sizeOf(context);
     // videosLink = context.read<OnboardingCubit>().videos;
     // _ytbPlayerController = context.read<OnboardingCubit>().ytbPlayerController;
-    GlobalKey<ScaffoldState> scaffolKey = GlobalKey<ScaffoldState>();
-    return Scaffold(
-        appBar: PreferredSize(
-            preferredSize: Size.fromHeight(1.h),
-            child: AppBar(
-                automaticallyImplyLeading: false,
-                backgroundColor: Appcolors.redColor)),
-        key: scaffolKey,
-        drawer: const NavDrawer(),
-        backgroundColor: Appcolors.white.withOpacity(0.1),
-        body: Column(
-          children: [
-            HomeAppbar2(
-                ontap: () => scaffolKey.currentState?.openDrawer(),
-                userDoc: userDoc),
-            SizedBox(height: size.height * 0.005),
-            const HomeBalance(),
-            SizedBox(height: size.height * 0.005),
-            HomeVideo(
-              ontap: () async {
-                // Generate a code
-                final generatedCode =
-                    context.read<OnboardingCubit>().generateCode();
 
-                // Set expiration time (for example, 1 hour from now)
-                final expirationTime =
-                    DateTime.now().add(const Duration(minutes: 5));
-
-                // Set the code and expiration time in Firebase
-                await context
-                    .read<OnboardingCubit>()
-                    .setCodeInFirebase(generatedCode, expirationTime);
-                lauchyoutube(
-                    youtube:
-                        context.read<OnboardingCubit>().videos.last.url!);
-              },
-            ),
-            SizedBox(height: size.height * 0.025),
-            _getCodebutton
-                ? TextButton(
-                    onPressed: () async {
-                      OnboardingCubit onboardingCubit =
-                          context.read<OnboardingCubit>();
-                      if (await onboardingCubit.isCodeValid()) {
-                        var code = await onboardingCubit.getRandomCode();
-                        // Show the success dialog
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return SuccessDialog(
-                              message: code,
-                            );
-                          },
-                        );
-                        setState(() {
-                          _getCodebutton = false;
-                        });
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return FialedDialog(
-                              message: 'Your code is Expire Now',
-                            );
-                          },
-                        );
-                        setState(() {
-                          _getCodebutton = false;
-                        });
-                      }
-                    },
-                    child: Text(
-                      'Get Code',
-                      style: TextStyle(color: Appcolors.blue),
-                    ))
-                : SizedBox.shrink(),
-            SizedBox(height: size.height * 0.005),
-            const HomeProgressIndicator(),
-            SizedBox(height: size.height * 0.005),
-            const HomePlan(),
-            SizedBox(height: size.height * 0.06),
-            AppButton(
-              height: 50,
-              width: size.width * 0.86,
-              child: AppText(
-                  text: 'Claim reward ',
-                  size: 20,
-                  fontweight: FontWeight.w700,
-                  color: Appcolors.yellow),
-              ontap: () {
-                // Navigate to the desired screen or perform any other actions
-                Navigator.pushNamed(context, RouteName.videoInputCode);
-              },
-            ),
-            // SizedBox(height: size.height * 0.07),
-          ],
-        ));
+    return SafeArea(
+      child: Scaffold(
+          appBar: PreferredSize(
+              preferredSize: Size.fromHeight(1.h),
+              child: AppBar(
+                  automaticallyImplyLeading: false,
+                  backgroundColor: Appcolors.redColor)),
+          key: widget.scaffoldKey,
+          // drawer: const NavDrawer(),
+          backgroundColor: Appcolors.white.withOpacity(0.1),
+          body: Column(
+            children: [
+              HomeAppbar2(
+                  ontap: () =>
+                   widget.scaffoldKey.currentState!.openDrawer()
+                  ,
+                  userDoc: userDoc),
+              SizedBox(height: size.height * 0.005),
+              const HomeBalance(),
+              SizedBox(height: size.height * 0.005),
+              HomeVideo(
+                ontap: () async {
+                  // Generate a code
+                  final generatedCode =
+                      context.read<OnboardingCubit>().generateCode();
+    
+                  // Set expiration time (for example, 1 hour from now)
+                  final expirationTime =
+                      DateTime.now().add(const Duration(minutes: 5));
+    
+                  // Set the code and expiration time in Firebase
+                  await context
+                      .read<OnboardingCubit>()
+                      .setCodeInFirebase(generatedCode, expirationTime);
+                  lauchyoutube(
+                      youtube:
+                          context.read<OnboardingCubit>().videos.last.url!);
+                },
+              ),
+              SizedBox(height: size.height * 0.025),
+              _getCodebutton
+                  ? TextButton(
+                      onPressed: () async {
+                        OnboardingCubit onboardingCubit =
+                            context.read<OnboardingCubit>();
+                        if (await onboardingCubit.isCodeValid()) {
+                          var code = await onboardingCubit.getRandomCode();
+                          // Show the success dialog
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return SuccessDialog(
+                                message: code,
+                              );
+                            },
+                          );
+                          setState(() {
+                            _getCodebutton = false;
+                          });
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return FialedDialog(
+                                message: 'Your code is Expire Now',
+                              );
+                            },
+                          );
+                          setState(() {
+                            _getCodebutton = false;
+                          });
+                        }
+                      },
+                      child: Text(
+                        'Get Code',
+                        style: TextStyle(color: Appcolors.blue),
+                      ))
+                  : SizedBox.shrink(),
+              SizedBox(height: size.height * 0.005),
+              const HomeProgressIndicator(),
+              SizedBox(height: size.height * 0.005),
+              const HomePlan(),
+              SizedBox(height: size.height * 0.06),
+              AppButton(
+                height: 50,
+                width: size.width * 0.86,
+                child: AppText(
+                    text: 'Claim reward ',
+                    size: 20,
+                    fontweight: FontWeight.w700,
+                    color: Appcolors.yellow),
+                ontap: () {
+                  // Navigate to the desired screen or perform any other actions
+                  Navigator.pushNamed(context, RouteName.videoInputCode);
+                },
+              ),
+              // SizedBox(height: size.height * 0.07),
+            ],
+          )),
+    );
   }
 
   lauchyoutube({required String youtube}) async {

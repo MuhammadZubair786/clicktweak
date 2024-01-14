@@ -1,3 +1,6 @@
+// ignore_for_file: sort_child_properties_last
+
+import 'package:clicktwaek/feature/home/presentration/src/widgets/home_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:clicktwaek/feature/minning/presentation/pages/miningSplash.dart';
@@ -5,14 +8,37 @@ import 'package:clicktwaek/feature/plans/presentation/pages/plans.dart';
 import 'package:clicktwaek/feature/withdraw/presentation/pages/witdraw.dart';
 import 'package:clicktwaek/constants/export.dart';
 import 'package:clicktwaek/feature/splash_onboarding/presentation/bloc/cubit/onboarding_cubit.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../home/presentration/pages/home.dart';
 import '../../../home/presentration/src/widgets/navigationDrawer.dart';
 import '../widgets/widgets.dart';
 
-class BottomNav extends StatelessWidget {
+class BottomNav extends StatefulWidget {
   const BottomNav({Key? key}) : super(key: key);
 
+  @override
+  State<BottomNav> createState() => _BottomNavState();
+}
+
+class _BottomNavState extends State<BottomNav> {
+      final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+@override
+      void initState(){
+        super.initState();
+        getData();
+
+      }
+
+
+      void getData() async {
+    await context.read<OnboardingCubit>().getUserData();
+    userDoc = context.read<OnboardingCubit>().userDoc;
+  }
+
+
+      var userDoc = <String, dynamic>{};
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -21,15 +47,17 @@ class BottomNav extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
+    
       body: IndexedStack(
         index: watchOnboarding.bottonnavSelectedIndex,
         children: [
-          const HomePage(),
+           HomePage(scaffoldKey: scaffoldKey),
           const Plans(),
           MiningSplash(),
           const Withdraw(),
         ],
       ),
+         drawer: const NavDrawer(),
 
       bottomNavigationBar:
           buildBottomNavigationBar(watchOnboarding, readOnboarding, size),

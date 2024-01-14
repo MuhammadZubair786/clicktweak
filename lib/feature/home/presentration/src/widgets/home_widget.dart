@@ -1,14 +1,49 @@
 import 'package:clicktwaek/feature/splash_onboarding/data/local/onboarding_images.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../config/page route/page_route.dart';
 import '../../../../../constants/export.dart';
 import '../../../data/home_images.dart';
 
-class HomePlan extends StatelessWidget {
+class HomePlan extends StatefulWidget {
   const HomePlan({super.key});
 
+  @override
+  State<HomePlan> createState() => _HomePlanState();
+}
+
+class _HomePlanState extends State<HomePlan> {
+
+@override
+void initState(){
+  super.initState();
+  getCurrentEarn();
+}
+
+var earn_plan ="0";
+getCurrentEarn() async {
+   final firestore = FirebaseFirestore.instance;
+     var _preferences = await SharedPreferences.getInstance();
+     var planId=     _preferences.getString("planId");
+DocumentSnapshot planDoc = await firestore.collection('Plans').doc(planId).get();
+
+if (planDoc.exists) {
+  var plans = planDoc.data() as Map<String, dynamic>?;
+
+  if (plans != null && plans.containsKey("earn_per_video") && plans["earn_per_video"] != null) {
+   earn_plan  = plans["earn_per_video"].toString();
+  } else {
+    // Handle the case where "earn_per_video" is not present or has a null value
+    earn_plan = "0"; // Replace "Default Value" with your desired default value
+  }
+} else {
+  // Handle the case where the document with the given planId does not exist
+  earn_plan = "0"; // Replace "Default Value" with your desired default value
+}
+}
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -17,7 +52,7 @@ class HomePlan extends StatelessWidget {
       child: Row(
         children: [
           AppText(
-              text: 'Plan \$0.083',
+              text: 'Plan \$${earn_plan.toString()}',
               size: 20,
               fontweight: FontWeight.w600,
               color: Appcolors.blackColor),
@@ -98,8 +133,34 @@ class HomeVideo extends StatelessWidget {
   }
 }
 
-class HomeBalance extends StatelessWidget {
+class HomeBalance extends StatefulWidget {
   const HomeBalance({super.key});
+
+  @override
+  State<HomeBalance> createState() => _HomeBalanceState();
+}
+
+class _HomeBalanceState extends State<HomeBalance> {
+
+
+
+void initState(){
+  super.initState();
+  getData();
+}
+
+var Earn = "0";
+var Balance = "0";
+
+
+getData() async {
+    var _preferences = await SharedPreferences.getInstance();
+     Earn =   _preferences.getString("totalEarning")!;
+      Balance=    _preferences.getString("Balance")!;
+
+          
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -124,22 +185,23 @@ class HomeBalance extends StatelessWidget {
               Image.asset(HomeImages.wlogo),
               SizedBox(height: size.height * 0.015),
               AppText(
-                size: 24,
+                size: 28,
                 text: ' Total Balance',
                 fontweight: FontWeight.w600,
                 color: Appcolors.white,
               ),
-              SizedBox(height: size.height * 0.01),
-              AppText(
+               AppText(
                 size: 32,
-                text: '\$670',
+                text: ' \$${Balance.toString()}',
                 fontweight: FontWeight.w800,
                 color: Appcolors.white,
               ),
+             
+             
               SizedBox(height: size.height * 0.01),
               AppText(
                 size: 20,
-                text: 'Total Earned \$1000',
+                text: ' Total Earned \$${Earn.toString()}',
                 color: Appcolors.white,
               ),
               SizedBox(height: size.height * 0.03),

@@ -25,6 +25,13 @@ class _FirstOnboardState extends State<FirstOnboard> {
             RouteName.referCodeInput,
           );
         }
+        if(state is OnAlreadySigin){
+            Navigator.pushNamed(
+            context,
+            RouteName.bottomnav,
+          );
+
+        }
       },
       child: AppScaffold(
         backGroundColor: Appcolors.white,
@@ -38,7 +45,7 @@ class _FirstOnboardState extends State<FirstOnboard> {
             const Center(
                 child: AppText(
                     textalign: TextAlign.center,
-                    text: 'ClickTeak',
+                    text: 'ClickTweak',
                     size: 16,
                     fontweight: FontWeight.w900)),
             SizedBox(height: size.height * 0.2),

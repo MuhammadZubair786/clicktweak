@@ -16,8 +16,8 @@ Widget buildBottomNavigationBar(OnboardingCubit watchOnboarding,
     ),
     decoration: BoxDecoration(
       color: watchOnboarding.bottonnavSelectedIndex == 2
-          ? Color.fromARGB(255, 7, 115, 255)
-          : Appcolors.redColor,
+          ? Color.fromARGB(255, 184, 183, 183)
+          : Color.fromARGB(255, 184, 183, 183),
       boxShadow: const [
         BoxShadow(
           color: Color(0x07000000),

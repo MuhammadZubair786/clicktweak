@@ -1,6 +1,11 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:clicktwaek/config/page%20route/detail/route_name.dart';
 import 'package:clicktwaek/constants/export.dart';
 import 'package:clicktwaek/feature/plans/presentation/bloc/cubit/plans_cubit.dart';
+import 'package:clicktwaek/feature/plans/presentation/pages/plans_details.dart';
+import 'package:clicktwaek/feature/splash_onboarding/presentation/bloc/cubit/onboarding_cubit.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,31 +21,53 @@ class Plans extends StatefulWidget {
 }
 
 class _PlansState extends State<Plans> {
-    GlobalKey<ScaffoldState> scaffolKey = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> scaffolKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     return AppScaffold(
         backGroundColor: Appcolors.white,
         color: Appcolors.redColor,
-         drawer: const NavDrawer(),
+        drawer: const NavDrawer(),
         body: Column(
           children: [
-             PlansAppbar(
-              data:scaffolKey
-            ),
+            PlansAppbar(data: scaffolKey),
             SizedBox(height: size.height * 0.02),
             context.watch<PlansCubit>().planFilter == 'PLANS'
-                ? const AllPlans()
-                : const YourPlans()
+                ? AllPlans()
+                :  YourPlans()
           ],
         ));
   }
 }
 
-class YourPlans extends StatelessWidget {
+class YourPlans extends StatefulWidget {
   const YourPlans({super.key});
 
+  @override
+  State<YourPlans> createState() => _YourPlansState();
+}
+
+class _YourPlansState extends State<YourPlans> {
+  
+@override
+  void initState(){
+    super.initState();
+    getCurrentPackage();
+  }
+
+  var userPlan;
+
+  getCurrentPackage() async {
+    var res =await  OnboardingCubit().getUserPlansData();
+    
+      setState(() {
+          userPlan=res;
+      });
+
+
+    
+  }
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -51,14 +78,16 @@ class YourPlans extends StatelessWidget {
       margin: EdgeInsets.symmetric(
           horizontal: size.width * 0.03, vertical: size.height * 0.005),
       shadowcolour: Appcolors.white,
-      color: Appcolors.blackColor,
-      child: Row(
+      color:  userPlan!=null ? Appcolors.blackColor:Colors.white,
+      child:
+      userPlan!=null ?
+       Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const AppText(
-                text: 'FREE PLAN',
+             AppText(
+                text: '${userPlan["title"].toString()}',
                 size: 16,
                 fontweight: FontWeight.w900,
                 color: Color(0xFFB9B9B9)),
@@ -69,8 +98,8 @@ class YourPlans extends StatelessWidget {
                 fontweight: FontWeight.w700,
                 color: Color(0xFFB9B9B9)),
             SizedBox(height: size.height * 0.002),
-            const AppText(
-                text: '\$0',
+             AppText(
+                text: '\$ ${userPlan["price"].toString()}',
                 size: 16,
                 fontweight: FontWeight.w700,
                 color: Color(0xFFB9B9B9)),
@@ -81,8 +110,8 @@ class YourPlans extends StatelessWidget {
                 fontweight: FontWeight.w700,
                 color: Color(0xFFB9B9B9)),
             SizedBox(height: size.height * 0.002),
-            const AppText(
-                text: '\$0.083/\$10',
+             AppText(
+                text: '\$ ${userPlan["earn_per_video"].toString()}',
                 size: 16,
                 fontweight: FontWeight.w700,
                 color: Color(0xFFB9B9B9))
@@ -99,14 +128,14 @@ class YourPlans extends StatelessWidget {
             ],
           )
         ],
-      ),
+      ):Container(),
     );
   }
 }
 
 class PlansAppbar extends StatelessWidget {
   var data;
-   PlansAppbar({super.key,this.data});
+  PlansAppbar({super.key, this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -123,10 +152,8 @@ class PlansAppbar extends StatelessWidget {
         children: [
           Row(children: [
             GestureDetector(
-              onTap:
-                () => data.currentState?.openDrawer(),
-              
-              child: Image.asset(HomeImages.wlogo)),
+                onTap: () => data.currentState?.openDrawer(),
+                child: Image.asset(HomeImages.wlogo)),
             SizedBox(width: size.width * 0.025),
             AppText(
                 size: 20,
@@ -231,6 +258,24 @@ class AllPlans extends StatefulWidget {
 }
 
 class _AllPlansState extends State<AllPlans> {
+  var plansList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getAllPlans();
+  }
+
+  getAllPlans() async {
+    var data = await OnboardingCubit().getPlansData();
+    print(data);
+    if (data.length > 0) {
+      plansList = data;
+      setState(() {});
+    }
+    return data;
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -238,10 +283,15 @@ class _AllPlansState extends State<AllPlans> {
       child: SingleChildScrollView(
         child: Column(
           children: List.generate(
-              10,
+              plansList.length,
               (index) => GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, RouteName.planDetail);
+                      // Navigator.pushNamed(context, RouteName.planDetail,arguments: [
+                      //    plansList[index]
+                      // ]);
+                      Navigator.push(context, MaterialPageRoute(builder: (conetxt)=>PlansDetails(
+                        data:plansList[index]
+                      )));
                     },
                     child: AppshadowContainer(
                       padding: EdgeInsets.symmetric(
@@ -272,7 +322,7 @@ class _AllPlansState extends State<AllPlans> {
                                     color: Appcolors.white),
                                 SizedBox(height: size.height * 0.002),
                                 AppText(
-                                    text: '\$20',
+                                    text: '\$ ${plansList[index]["price"]}',
                                     size: 16,
                                     fontweight: FontWeight.w700,
                                     color: Appcolors.white),
@@ -284,7 +334,7 @@ class _AllPlansState extends State<AllPlans> {
                                     color: Appcolors.white),
                                 SizedBox(height: size.height * 0.002),
                                 AppText(
-                                    text: '\$0.332/\$319',
+                                    text: '\$ ${plansList[index]["earn_per_video"]}/\$${plansList[index]["total_earn_user"]}',
                                     size: 16,
                                     fontweight: FontWeight.w700,
                                     color: Appcolors.white)

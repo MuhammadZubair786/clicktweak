@@ -155,13 +155,14 @@ class _MiningSplashState extends State<MiningSplash> {
                               borderRadius: BorderRadius.circular(
                                   MediaQuery.of(context).size.width * 0.03)),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               //icon
                               Image.asset(
                                 HomeImages.logOut,
-                                height: 80,
+                                height:100,
                                 color: Appcolors.white,
+                                // fit: BoxFit.contain,
                               ),
                               AppText(
                                 text: 'Start Mining',
@@ -174,8 +175,11 @@ class _MiningSplashState extends State<MiningSplash> {
                               ),
                               Image.asset(
                                 OnboardingImages.miningSplash,
-                                height: 35.sp,
+                                height: 40.sp,
                                 fit: BoxFit.cover,
+                              ),
+                                const SizedBox(
+                                width: 20,
                               ),
                             ],
                           ),
@@ -279,7 +283,7 @@ class UpdateWallet extends StatelessWidget {
                       SizedBox(width: size.width * 0.02),
                       AppText(
                           text: '2.45 m/h',
-                          size: 10,
+                          size: 15,
                           color: Appcolors.lightGreen,
                           fontweight: FontWeight.w500),
                     ],

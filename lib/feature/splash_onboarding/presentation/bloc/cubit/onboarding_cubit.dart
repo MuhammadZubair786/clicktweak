@@ -1,9 +1,12 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'dart:developer' as dev;
 import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 part 'onboarding_state.dart';
 
 class OnboardingCubit extends Cubit<OnboardingState> {
@@ -185,8 +188,16 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     try {
       GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
       var credietial = await auth.signInWithProvider(googleAuthProvider);
-      addUserInfo();
-      emit(OnboardingSigin());
+       bool userExists = await checkIfUserExists();
+       if(userExists){
+        emit(OnAlreadySigin());
+       }
+       else{
+         addUserInfo();
+        emit(OnboardingSigin());
+
+       }
+     
     } catch (error) {
       emit(const OnboardingError(error: 'error'));
       dev.log(error.toString());
@@ -205,9 +216,10 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     }
   }
 
-  addUserInfo() {
+  addUserInfo() async {
     dev.log(auth.currentUser!.displayName.toString());
     dev.log(auth.currentUser!.email.toString());
+    var res = await generateUniqueCode();
     firestore
         .collection('users')
         .doc(auth.currentUser!.uid)
@@ -215,8 +227,38 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       'email': auth.currentUser!.email,
       'avatar': auth.currentUser!.photoURL,
       'name': auth.currentUser!.displayName,
+      "Balance":"0",
+      "inviteCode":res,
+      "planId":"xYhWeeGnYTPe0Dvr6Dmh",
+      "totalEarning":"0"
     });
   }
+
+  Future<bool> checkIfUserExists() async {
+  DocumentSnapshot userDoc = await firestore.collection('users').doc(auth.currentUser!.uid).get();
+  return userDoc.exists;
+}
+
+
+Future<String> generateUniqueCode() async {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  final random = Random();
+  var code = List.generate(6, (index) => chars[random.nextInt(chars.length)]).join();
+
+  bool codeExists = await checkIfCodeExists(code);
+  if (codeExists) {
+    return generateUniqueCode();
+  }
+
+  dev.log(code);
+  return code;
+}
+
+// Function to check if the generated code already exists in Firestore
+Future<bool> checkIfCodeExists(String code) async {
+  QuerySnapshot querySnapshot = await firestore.collection('codes').where('code', isEqualTo: code).get();
+  return querySnapshot.docs.isNotEmpty;
+}
 
   Future getUserData() async {
     try {
@@ -224,6 +266,16 @@ class OnboardingCubit extends Cubit<OnboardingState> {
           await firestore.collection('users').doc(auth.currentUser!.uid).get();
       if (userDoc.exists) {
         _userDoc = userDoc.data() ?? <String, dynamic>{};
+        var _preferences = await SharedPreferences.getInstance();
+
+         _preferences.setString("avatar", userDoc.data()?['avatar'] ?? "");
+         _preferences.setString("email", userDoc.data()?['email'] ?? "");
+          _preferences.setString("inviteCode", userDoc.data()?['inviteCode'] ?? "");
+          _preferences.setString("name", userDoc.data()?['name'] ?? "");
+          _preferences.setString("planId", userDoc.data()?['planId'] ?? "");
+          _preferences.setString("totalEarning", userDoc.data()?['totalEarning'] ?? "");
+          _preferences.setString("Balance", userDoc.data()?['Balance'] ?? "");
+
         dev.log('User data: ${userDoc.data()}');
       } else {
         dev.log('User data not found');
@@ -232,6 +284,71 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       dev.log('Error fetching user data: $error');
     }
   }
+  Future<List<Map<String, dynamic>>> getPlansData() async {
+  try {
+    var _preferences = await SharedPreferences.getInstance();
+     var planId =  _preferences.getString("planId");
+
+    var plans = <Map<String, dynamic>>[]; // Specify the type of the list elements
+    var data = await FirebaseFirestore.instance.collection("Plans").get();
+    var maindata = data.docs;
+    
+    for (var i = 0; i < maindata.length; i++) {
+           if(maindata[i].data()["planId"]!=planId && maindata[i].data()["price"].toString()!="0"){
+               plans.add(maindata[i].data());
+      dev.log(maindata[i].data().toString());
+
+           }
+   
+    }
+    
+    print(plans);
+   for (int i = 0; i < plans.length - 1; i++) {
+    for (int j = 0; j < plans.length - i - 1; j++) {
+      if (int.parse(plans[j]["price"]) > int.parse((plans[j + 1]["price"]))) {
+        // Swap if the current element is greater than the next element
+        Map<String, dynamic> temp = plans[j];
+        plans[j] = plans[j + 1];
+        plans[j + 1] = temp;
+      }
+    }
+  }
+    return plans;
+
+  } catch (e) {
+    dev.log(e.toString());
+    return <Map<String, dynamic>>[]; // Return an empty list or handle the error accordingly
+  }
+}
+
+getUserPlansData() async {
+  try {
+    var finalList = <Map<String, dynamic>>[]; // Specify the type of the list elements
+    print(auth.currentUser!.uid);
+  
+     DocumentSnapshot<Map<String, dynamic>> userDoc =
+          await firestore.collection('users').doc(auth.currentUser!.uid).get();
+      if (userDoc.exists) {
+        _userDoc = userDoc.data() ?? <String, dynamic>{};
+        dev.log('User data: ${userDoc.data()}');
+          var getplansUser  = await FirebaseFirestore.instance.collection("Plans").doc(userDoc.data()!["planId"]).get();
+          // print(getplansUser.data()![""]);
+          if(getplansUser.data()!=null){
+            print(getplansUser.data());
+            return getplansUser.data();
+          }
+      } else {
+        dev.log('User data not found');
+      }
+
+   
+    // return maindata;
+
+  } catch (e) {
+    dev.log(e.toString());
+    return <Map<String, dynamic>>[]; // Return an empty list or handle the error accordingly
+  }
+}
 
   Future getvideo() async {
     try {

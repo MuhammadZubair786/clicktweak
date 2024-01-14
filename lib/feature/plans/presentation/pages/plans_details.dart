@@ -8,12 +8,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class PlansDetails extends StatelessWidget {
-  const PlansDetails({super.key});
+class PlansDetails extends StatefulWidget {
+  var data;
+   PlansDetails({super.key,this.data});
 
+  @override
+  State<PlansDetails> createState() => _PlansDetailsState();
+}
+
+class _PlansDetailsState extends State<PlansDetails> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+    // List<dynamic> arguments = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
 
     return AppScaffold(
         backGroundColor: Appcolors.white,
@@ -30,11 +37,11 @@ class PlansDetails extends StatelessWidget {
             Padding(
                 padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
                 child: AppText(
-                    text: ' Total to pay \$670',
+                    text: ' Total to pay \$ ${widget.data["price"].toString()}',
                     size: 20,
                     color: Appcolors.blackColor)),
             SizedBox(height: size.height * 0.015),
-            const PlanDetailsContainer(),
+             PlanDetailsContainer(data:widget.data),
             Expanded(child: Container()),
             Padding(
               padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
@@ -70,9 +77,15 @@ class PlansDetails extends StatelessWidget {
   }
 }
 
-class PlanDetailsContainer extends StatelessWidget {
-  const PlanDetailsContainer({super.key});
+class PlanDetailsContainer extends StatefulWidget {
+  var data;
+   PlanDetailsContainer({super.key,this.data});
 
+  @override
+  State<PlanDetailsContainer> createState() => _PlanDetailsContainerState();
+}
+
+class _PlanDetailsContainerState extends State<PlanDetailsContainer> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -90,7 +103,7 @@ class PlanDetailsContainer extends StatelessWidget {
         children: [
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             AppText(
-                text: 'PLAN 5',
+                text: '${widget.data["title"]}',
                 size: 16,
                 fontweight: FontWeight.w900,
                 color: Appcolors.white),
@@ -102,7 +115,7 @@ class PlanDetailsContainer extends StatelessWidget {
                 color: Appcolors.white),
             SizedBox(height: size.height * 0.002),
             AppText(
-                text: '\$20',
+                text: '${widget.data["price"]}',
                 size: 16,
                 fontweight: FontWeight.w700,
                 color: Appcolors.white),
@@ -114,7 +127,7 @@ class PlanDetailsContainer extends StatelessWidget {
                 color: Appcolors.white),
             SizedBox(height: size.height * 0.002),
             AppText(
-                text: '\$1.6',
+                text: '\$ ${widget.data["earn_per_video"]}',
                 size: 16,
                 fontweight: FontWeight.w700,
                 color: Appcolors.white)

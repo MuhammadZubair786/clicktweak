@@ -7,6 +7,7 @@ import 'package:clicktwaek/feature/home/data/home_images.dart';
 import 'package:clicktwaek/feature/home/presentration/src/home_exports.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Refer extends StatelessWidget {
   const Refer({super.key});
@@ -52,8 +53,28 @@ class Refer extends StatelessWidget {
   }
 }
 
-class ReferalCode extends StatelessWidget {
+class ReferalCode extends StatefulWidget {
   const ReferalCode({super.key});
+
+  @override
+  State<ReferalCode> createState() => _ReferalCodeState();
+}
+
+class _ReferalCodeState extends State<ReferalCode> {
+
+void initState(){
+  super.initState();
+  getCode();
+}
+var code ="";
+
+getCode() async {
+     var _preferences = await SharedPreferences.getInstance();
+     code =   _preferences.getString("inviteCode")!;
+     setState(() {
+       
+     });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +86,8 @@ class ReferalCode extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const AppText(
-              text: 'LANDCOIN444', size: 16, fontweight: FontWeight.w600),
+           AppText(
+              text: code.toString(), size: 16, fontweight: FontWeight.w600),
           SizedBox(width: size.width * 0.075),
           Row(
             children: [

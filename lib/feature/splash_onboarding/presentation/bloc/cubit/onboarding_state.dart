@@ -11,6 +11,9 @@ final class OnboardingInitial extends OnboardingState {}
 
 final class OnboardingLoadingState extends OnboardingState {}
 
+final class OnAlreadySigin extends OnboardingState {}
+
+
 final class OnboardingMiningLoadingState extends OnboardingState {}
 
 final class OnboardingMiningLoadedState extends OnboardingState {}

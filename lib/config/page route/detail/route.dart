@@ -23,7 +23,7 @@ class AppRoute {
       case RouteName.bottomnav:
         return CustomPageRoute(child: const BottomNav());
       case RouteName.planDetail:
-        return CustomPageRoute(child: const PlansDetails());
+        return CustomPageRoute(child:  PlansDetails());
 
       case RouteName.refer:
         return CustomPageRoute(child: const Refer());

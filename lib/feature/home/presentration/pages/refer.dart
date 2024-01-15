@@ -8,6 +8,7 @@ import 'package:clicktwaek/feature/home/presentration/src/home_exports.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
 
 class Refer extends StatelessWidget {
   const Refer({super.key});
@@ -37,7 +38,7 @@ class Refer extends StatelessWidget {
                     'Share this code with your friends and\nearn when they join'),
             SizedBox(height: size.height * 0.075),
             const ReferalCode(),
-            SizedBox(height: size.height * 0.31),
+            SizedBox(height: size.height * 0.21),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
               child: AppButton(
@@ -87,17 +88,23 @@ getCode() async {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
            AppText(
-              text: code.toString(), size: 16, fontweight: FontWeight.w600),
+              text: code.toString().toUpperCase() , size: 16, fontweight: FontWeight.w600),
           SizedBox(width: size.width * 0.075),
-          Row(
-            children: [
-              Icon(Icons.copy, color: Appcolors.blue, size: 25.sp),
-              AppText(
-                  text: '  Copy Code',
-                  size: 14,
-                  color: Appcolors.blue,
-                  fontweight: FontWeight.w700)
-            ],
+          GestureDetector(
+            onTap: () async {
+                await Clipboard.setData(ClipboardData(text: code.toString()));
+                
+            },
+            child: Row(
+              children: [
+                Icon(Icons.copy, color: Appcolors.blue, size: 25.sp),
+                AppText(
+                    text: '  Copy Code',
+                    size: 14,
+                    color: Appcolors.blue,
+                    fontweight: FontWeight.w700)
+              ],
+            ),
           )
         ],
       ),

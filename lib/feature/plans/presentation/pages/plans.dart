@@ -22,22 +22,80 @@ class Plans extends StatefulWidget {
 
 class _PlansState extends State<Plans> {
   GlobalKey<ScaffoldState> scaffolKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    return AppScaffold(
-        backGroundColor: Appcolors.white,
+
+    return DefaultTabController(
+      length: 2, // Number of tabs
+      child: AppScaffold(
+        backGroundColor: Color.fromARGB(255, 239, 240, 239),
         color: Appcolors.redColor,
-        drawer: const NavDrawer(),
+        // drawer: const NavDrawer(),
         body: Column(
           children: [
-            PlansAppbar(data: scaffolKey),
-            SizedBox(height: size.height * 0.02),
-            context.watch<PlansCubit>().planFilter == 'PLANS'
-                ? AllPlans()
-                :  YourPlans()
+            // PlansAppbar(data: scaffolKey),
+            // SizedBox(height: size.height * 0.02),
+
+            // TabBar
+            Container(
+              color: Colors.red,
+              child: TabBar(
+              
+              indicatorColor: Appcolors.yellow,
+                labelColor: Appcolors.orange,
+                unselectedLabelColor: const Color(0xFFC9C9C9),
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicatorWeight:5,
+                tabs: [
+                  Tab(child: Container(
+                    margin: EdgeInsets.only(top: 10),
+                    child: SizedBox(
+                      // width: size.width * 0.25,
+                      child: PlansFilter(
+                      
+                        title: 'PLANS',
+                        icon: ImageIcon(
+                          const AssetImage('assets/Icons/plansImage.png'),
+                          color:Appcolors.yellow
+                             
+                        ),
+                        // isActive: watchPlansCubit.planFilter == 'PLANS',
+                      ),
+                    ),
+                  ),),
+                  Tab(child: Container(
+                    margin: EdgeInsets.only(top: 10),
+                    child: PlansFilter(
+                    
+                      title: 'Your PLANS',
+                      icon: ImageIcon(
+                        const AssetImage('assets/Icons/plansImage.png'),
+                        color:Appcolors.yellow
+                           
+                      ),
+                      // isActive: watchPlansCubit.planFilter == 'PLANS',
+                    ),
+                  ),),
+                  // Tab(text: 'YOUR PLANS'),
+                ],
+              ),
+            ),
+
+            // TabBarView
+            Expanded(
+              child: TabBarView(
+                children: [
+                  AllPlans(),
+                  YourPlans(),
+                ],
+              ),
+            ),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }
 
@@ -49,9 +107,8 @@ class YourPlans extends StatefulWidget {
 }
 
 class _YourPlansState extends State<YourPlans> {
-  
-@override
-  void initState(){
+  @override
+  void initState() {
     super.initState();
     getCurrentPackage();
   }
@@ -59,77 +116,105 @@ class _YourPlansState extends State<YourPlans> {
   var userPlan;
 
   getCurrentPackage() async {
-    var res =await  OnboardingCubit().getUserPlansData();
-    
-      setState(() {
-          userPlan=res;
-      });
+    var res = await OnboardingCubit().getUserPlansData();
 
-
-    
+    setState(() {
+      userPlan = res;
+    });
   }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    return AppshadowContainer(
-      padding: EdgeInsets.symmetric(
-          vertical: size.width * 0.02, horizontal: size.width * 0.03),
-      radius: size.width * 0.02,
-      margin: EdgeInsets.symmetric(
-          horizontal: size.width * 0.03, vertical: size.height * 0.005),
-      shadowcolour: Appcolors.white,
-      color:  userPlan!=null ? Appcolors.blackColor:Colors.white,
-      child:
-      userPlan!=null ?
-       Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-             AppText(
-                text: '${userPlan["title"].toString()}',
-                size: 16,
-                fontweight: FontWeight.w900,
-                color: Color(0xFFB9B9B9)),
-            SizedBox(height: size.height * 0.003),
-            const AppText(
-                text: 'Price',
-                size: 16,
-                fontweight: FontWeight.w700,
-                color: Color(0xFFB9B9B9)),
-            SizedBox(height: size.height * 0.002),
-             AppText(
-                text: '\$ ${userPlan["price"].toString()}',
-                size: 16,
-                fontweight: FontWeight.w700,
-                color: Color(0xFFB9B9B9)),
-            SizedBox(height: size.height * 0.002),
-            const AppText(
-                text: 'Earnings per day',
-                size: 16,
-                fontweight: FontWeight.w700,
-                color: Color(0xFFB9B9B9)),
-            SizedBox(height: size.height * 0.002),
-             AppText(
-                text: '\$ ${userPlan["earn_per_video"].toString()}',
-                size: 16,
-                fontweight: FontWeight.w700,
-                color: Color(0xFFB9B9B9))
-          ]),
-          Column(
-            children: [
-              Image.asset(HomeImages.wlogo),
-              SizedBox(height: size.height * 0.055),
-              AppText(
-                  text: 'Join Now',
-                  size: 16,
-                  fontweight: FontWeight.w900,
-                  color: Appcolors.yellow)
-            ],
-          )
-        ],
-      ):Container(),
-    );
+    return 
+    userPlan==null ?
+   
+      Container(
+      width: 80.0,
+      height: 80.0,
+      decoration: BoxDecoration(
+     color: Colors.white,
+     borderRadius: BorderRadius.circular(10.0),
+     boxShadow: [
+       BoxShadow(
+         color: Colors.grey.withOpacity(0.5),
+         spreadRadius: 2,
+         blurRadius: 5,
+         offset: Offset(0, 3),
+       ),
+     ],
+      ),
+      child: Center(
+     child: CircularProgressIndicator(
+       valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
+       strokeWidth: 8.0,
+     ),
+      ),
+    ):
+    userPlan != null
+        ? Column(
+          children: [
+            Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(border: Border.all(width: 2,color: Colors.white),
+              borderRadius: BorderRadius.circular(10),
+               color: Colors.black,
+              ),
+
+             
+              height: MediaQuery.of(context).size.height*0.18,
+              child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      AppText(
+                          text: '${userPlan["title"].toString()}',
+                          size: 16,
+                          fontweight: FontWeight.w900,
+                          color: Color(0xFFB9B9B9)),
+                      SizedBox(height: size.height * 0.003),
+                      const AppText(
+                          text: 'Price',
+                          size: 16,
+                          fontweight: FontWeight.w700,
+                          color: Color(0xFFB9B9B9)),
+                      SizedBox(height: size.height * 0.002),
+                      AppText(
+                          text: '\$ ${userPlan["price"].toString()}',
+                          size: 16,
+                          fontweight: FontWeight.w700,
+                          color: Color(0xFFB9B9B9)),
+                      SizedBox(height: size.height * 0.002),
+                      const AppText(
+                          text: 'Earnings per day',
+                          size: 16,
+                          fontweight: FontWeight.w700,
+                          color: Color(0xFFB9B9B9)),
+                      SizedBox(height: size.height * 0.002),
+                      AppText(
+                          text: '\$ ${userPlan["earn_per_video"].toString()}',
+                          size: 16,
+                          fontweight: FontWeight.w700,
+                          color: Color(0xFFB9B9B9))
+                    ]),
+                    // Column(
+                    //   children: [
+                    //     Image.asset(HomeImages.wlogo),
+                    //     SizedBox(height: size.height * 0.055),
+                    //     AppText(
+                    //         text: 'Join Now',
+                    //         size: 16,
+                    //         fontweight: FontWeight.w900,
+                    //         color: Appcolors.yellow)
+                    //   ],
+                    // )
+                  ],
+                ),
+            ),
+          ],
+        )
+        : Container();
   }
 }
 
@@ -146,21 +231,10 @@ class PlansAppbar extends StatelessWidget {
       padding: EdgeInsets.symmetric(
           vertical: size.width * 0.02, horizontal: size.width * 0.03),
       radius: 0,
-      shadowcolour: Appcolors.redColor,
-      color: Appcolors.redColor,
+      shadowcolour: Appcolors.blue,
+      color: Appcolors.blue,
       child: Column(
         children: [
-          Row(children: [
-            GestureDetector(
-                onTap: () => data.currentState?.openDrawer(),
-                child: Image.asset(HomeImages.wlogo)),
-            SizedBox(width: size.width * 0.025),
-            AppText(
-                size: 20,
-                text: 'ClickTweak',
-                fontweight: FontWeight.w900,
-                color: Appcolors.white)
-          ]),
           SizedBox(height: size.height * 0.03),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
@@ -170,30 +244,30 @@ class PlansAppbar extends StatelessWidget {
                 SizedBox(
                   width: size.width * 0.25,
                   child: PlansFilter(
-                      ontap: () =>
-                          readPlansCubit.selectPlansFilter(plan: 'PLANS'),
-                      title: 'PLANS',
-                      icon: ImageIcon(
-                        const AssetImage('assets/Icons/plansImage.png'),
-                        color: watchPlansCubit.planFilter == 'PLANS'
-                            ? Appcolors.yellow
-                            : const Color(0xFFC9C9C9),
-                      ),
-                      isActive: watchPlansCubit.planFilter == 'PLANS'),
+                    ontap: () =>
+                        readPlansCubit.selectPlansFilter(plan: 'PLANS'),
+                    title: 'PLANS',
+                    icon: ImageIcon(
+                      const AssetImage('assets/Icons/plansImage.png'),
+                      color: watchPlansCubit.planFilter == 'PLANS'
+                          ? Appcolors.redColor
+                          : const Color(0xFFC9C9C9),
+                    ),
+                    isActive: watchPlansCubit.planFilter == 'PLANS',
+                  ),
                 ),
                 SizedBox(
                   width: size.width * 0.40,
                   child: PlansFilter(
-                      isActive: watchPlansCubit.planFilter == 'YOUR PLANS',
-                      ontap: () =>
-                          readPlansCubit.selectPlansFilter(plan: 'YOUR PLANS'),
-                      title: 'YOUR PLANS',
-                      icon: ImageIcon(
-                        const AssetImage('assets/Icons/plansImage.png'),
-                        color: watchPlansCubit.planFilter == 'YOUR PLANS'
-                            ? Appcolors.yellow
-                            : const Color(0xFFC9C9C9),
-                      )),
+                    isActive: watchPlansCubit.planFilter == 'YOUR PLANS',
+                    ontap: () =>
+                        readPlansCubit.selectPlansFilter(plan: 'YOUR PLANS'),
+                    title: 'YOUR PLANS',
+                    icon: ImageIcon(
+                      const AssetImage('assets/Icons/plansImage.png'),
+                      color: Colors.greenAccent
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -218,33 +292,36 @@ class PlansFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    return GestureDetector(
-      onTap: ontap,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              icon,
-              const SizedBox(
-                width: 8,
-              ),
-              AppText(
-                size: 16,
-                fontweight: FontWeight.w900,
-                text: title,
-                color: isActive ? Appcolors.yellow : const Color(0xFFC9C9C9),
-              ),
-            ],
-          ),
-          SizedBox(height: size.height * 0.004),
-          Container(
-            width: size.width,
-            height: size.height * 0.005,
-            decoration: BoxDecoration(
-                color: isActive ? Appcolors.yellow : Appcolors.redColor),
-          )
-        ],
+    return Container(
+      width: MediaQuery.of(context).size.width*0.5,
+      child: GestureDetector(
+        onTap: ontap,
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                icon,
+                const SizedBox(
+                  width: 16,
+                ),
+                AppText(
+                  size: 18,
+                  fontweight: FontWeight.w900,
+                  text: title,
+                  color:Appcolors.yellow
+                ),
+              ],
+            ),
+            SizedBox(height: size.height * 0.004),
+            // Container(
+            //   width: size.width,
+            //   height: size.height * 0.005,
+            //   decoration: BoxDecoration(
+            //       color: isActive ? Appcolors.yellow : Appcolors.redColor),
+            // )
+          ],
+        ),
       ),
     );
   }
@@ -279,83 +356,110 @@ class _AllPlansState extends State<AllPlans> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    return Expanded(
-      child: SingleChildScrollView(
-        child: Column(
-          children: List.generate(
-              plansList.length,
-              (index) => GestureDetector(
-                    onTap: () {
-                      // Navigator.pushNamed(context, RouteName.planDetail,arguments: [
-                      //    plansList[index]
-                      // ]);
-                      Navigator.push(context, MaterialPageRoute(builder: (conetxt)=>PlansDetails(
-                        data:plansList[index]
-                      )));
-                    },
-                    child: AppshadowContainer(
-                      padding: EdgeInsets.symmetric(
-                          vertical: size.width * 0.02,
-                          horizontal: size.width * 0.02),
-                      radius: size.width * 0.02,
-                      margin: EdgeInsets.symmetric(
-                          horizontal: size.width * 0.03,
-                          vertical: size.height * 0.005),
-                      shadowcolour: Appcolors.white,
-                      color: Appcolors.redColor,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                AppText(
-                                    text: 'PLAN ${index + 1}',
-                                    size: 16,
-                                    fontweight: FontWeight.w900,
-                                    color: Appcolors.white),
-                                SizedBox(height: size.height * 0.003),
-                                AppText(
-                                    text: 'Price',
-                                    size: 16,
-                                    fontweight: FontWeight.w700,
-                                    color: Appcolors.white),
-                                SizedBox(height: size.height * 0.002),
-                                AppText(
-                                    text: '\$ ${plansList[index]["price"]}',
-                                    size: 16,
-                                    fontweight: FontWeight.w700,
-                                    color: Appcolors.white),
-                                SizedBox(height: size.height * 0.002),
-                                AppText(
-                                    text: 'Earnings per video',
-                                    size: 16,
-                                    fontweight: FontWeight.w700,
-                                    color: Appcolors.white),
-                                SizedBox(height: size.height * 0.002),
-                                AppText(
-                                    text: '\$ ${plansList[index]["earn_per_video"]}/\$${plansList[index]["total_earn_user"]}',
-                                    size: 16,
-                                    fontweight: FontWeight.w700,
-                                    color: Appcolors.white)
-                              ]),
-                          Column(
-                            children: [
-                              Image.asset(HomeImages.wlogo),
-                              SizedBox(height: size.height * 0.055),
-                              AppText(
-                                  text: 'Join Now',
-                                  size: 16,
-                                  fontweight: FontWeight.w900,
-                                  color: Appcolors.yellow)
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  )),
-        ),
+    return plansList.length==0?
+      Container(
+      width: 80.0,
+      height: 80.0,
+      decoration: BoxDecoration(
+     color: Colors.white,
+     borderRadius: BorderRadius.circular(10.0),
+     boxShadow: [
+       BoxShadow(
+         color: Colors.grey.withOpacity(0.5),
+         spreadRadius: 2,
+         blurRadius: 5,
+         offset: Offset(0, 3),
+       ),
+     ],
       ),
-    );
+      child: Center(
+     child: CircularProgressIndicator(
+       valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
+       strokeWidth: 8.0,
+     ),
+      ),
+    ):
+
+      SingleChildScrollView(
+         child: Column(
+       children: List.generate(
+         plansList.length,
+         (index) => GestureDetector(
+           onTap: () {
+             Navigator.push(
+               context,
+               MaterialPageRoute(
+                 builder: (context) => PlansDetails(
+                   data: plansList[index],
+                 ),
+               ),
+             );
+           },
+           child: 
+           AppshadowContainer(
+             padding: EdgeInsets.symmetric(
+                 vertical: size.width * 0.02,
+                 horizontal: size.width * 0.02),
+             radius: size.width * 0.02,
+             margin: EdgeInsets.symmetric(
+                 horizontal: size.width * 0.03,
+                 vertical: size.height * 0.005),
+             shadowcolour: Appcolors.white,
+             color: Appcolors.redColor,
+             child: Row(
+               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               children: [
+                 Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                     AppText(
+                         text: 'PLAN ${index + 1}',
+                         size: 16,
+                         fontweight: FontWeight.w900,
+                         color: Appcolors.white),
+                     SizedBox(height: size.height * 0.003),
+                     AppText(
+                         text: 'Price',
+                         size: 16,
+                         fontweight: FontWeight.w700,
+                         color: Appcolors.white),
+                     SizedBox(height: size.height * 0.002),
+                     AppText(
+                         text: '\$ ${plansList[index]["price"]}',
+                         size: 16,
+                         fontweight: FontWeight.w700,
+                         color: Appcolors.white),
+                     SizedBox(height: size.height * 0.002),
+                     AppText(
+                         text: 'Earnings per video',
+                         size: 16,
+                         fontweight: FontWeight.w700,
+                         color: Appcolors.white),
+                     SizedBox(height: size.height * 0.002),
+                     AppText(
+                         text:
+                             '\$ ${plansList[index]["earn_per_video"]}/\$${plansList[index]["total_earn_user"]}',
+                         size: 16,
+                         fontweight: FontWeight.w700,
+                         color: Appcolors.white)
+                   ],
+                 ),
+                 Column(
+                   children: [
+                     Image.asset(HomeImages.wlogo),
+                     SizedBox(height: size.height * 0.055),
+                     AppText(
+                         text: 'Join Now',
+                               size: 16,
+                               fontweight: FontWeight.w900,
+                               color: Appcolors.yellow)
+                         ],
+                       )
+                     ],
+                   ),
+                 ),
+               )),
+         ),
+      );
   }
 }

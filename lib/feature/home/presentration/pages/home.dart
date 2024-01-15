@@ -2,6 +2,7 @@ import 'package:clicktwaek/config/page%20route/detail/route_name.dart';
 import 'package:clicktwaek/constants/export.dart';
 import 'package:clicktwaek/feature/home/presentration/pages/input_video_code.dart';
 import 'package:clicktwaek/feature/splash_onboarding/presentation/bloc/cubit/onboarding_cubit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,6 +35,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     getData();
     getyoutubegData();
+    GetHomeVideo();
     // _setOrientation([
     //   DeviceOrientation.landscapeRight,
     //   DeviceOrientation.landscapeLeft,
@@ -50,6 +52,19 @@ class _HomePageState extends State<HomePage> {
 
   void getyoutubegData() async {
     await context.read<OnboardingCubit>().getvideo();
+  }
+
+  var videoRes;
+
+  Future<void> GetHomeVideo() async {
+      final firestore = FirebaseFirestore.instance;
+     DocumentSnapshot<Map<String, dynamic>> userDoc =
+          await firestore.collection('Youtube_Videos').doc("vb2JO9xTybosSjzf9GPQ").get();
+          videoRes=userDoc;
+          setState(() {
+            
+          });
+
   }
 
   @override
@@ -99,31 +114,33 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Appcolors.white.withOpacity(0.1),
           body: Column(
             children: [
-              HomeAppbar2(
-                  ontap: () =>
-                   widget.scaffoldKey.currentState!.openDrawer()
-                  ,
-                  userDoc: userDoc),
+              // HomeAppbar2(
+              //     ontap: () =>
+              //      widget.scaffoldKey.currentState!.openDrawer()
+              //     ,
+              //     userDoc: userDoc),
               SizedBox(height: size.height * 0.005),
               const HomeBalance(),
               SizedBox(height: size.height * 0.005),
-              HomeVideo(
+            videoRes==null?Container():  HomeVideo(
+                data: videoRes,
                 ontap: () async {
                   // Generate a code
-                  final generatedCode =
-                      context.read<OnboardingCubit>().generateCode();
+                  // final generatedCode =
+                  //     context.read<OnboardingCubit>().generateCode();
     
-                  // Set expiration time (for example, 1 hour from now)
-                  final expirationTime =
-                      DateTime.now().add(const Duration(minutes: 5));
+                  // // Set expiration time (for example, 1 hour from now)
+                  // final expirationTime =
+                  //     DateTime.now().add(const Duration(minutes: 5));
     
                   // Set the code and expiration time in Firebase
-                  await context
-                      .read<OnboardingCubit>()
-                      .setCodeInFirebase(generatedCode, expirationTime);
+                  // await context
+                  //     .read<OnboardingCubit>()
+                  //     .setCodeInFirebase(generatedCode, expirationTime);
+                  print( videoRes.data()["Youtube_Link"]);
                   lauchyoutube(
                       youtube:
-                          context.read<OnboardingCubit>().videos.last.url!);
+                         videoRes.data()["Youtube_Link"]);
                 },
               ),
               SizedBox(height: size.height * 0.025),
@@ -161,7 +178,7 @@ class _HomePageState extends State<HomePage> {
                         }
                       },
                       child: Text(
-                        'Get Code',
+                        ' ',
                         style: TextStyle(color: Appcolors.blue),
                       ))
                   : SizedBox.shrink(),

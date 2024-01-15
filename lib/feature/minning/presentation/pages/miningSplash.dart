@@ -1,5 +1,7 @@
 import 'package:clicktwaek/feature/home/presentration/pages/input_video_code.dart';
 import 'package:clicktwaek/feature/home/presentration/src/utils.dart';
+import 'package:clicktwaek/feature/minning/presentation/pages/ShowSplash.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../constants/export.dart';
@@ -20,11 +22,26 @@ class MiningSplash extends StatefulWidget {
 
 class _MiningSplashState extends State<MiningSplash> {
   Future<void>? splashFuture;
+  var counter ="00:00";
 
   @override
   void initState() {
     super.initState();
-    splashFuture = splashFunction();
+    // splashFuture = splashFunction();
+  }
+
+
+  getCounter() async {
+
+      final firestore = FirebaseFirestore.instance;
+       DocumentSnapshot<Map<String, dynamic>> getdata =
+          await firestore.collection('Counter_Mining').doc("j1a3RD3hlewYXpoKmdES").get();
+      if (getdata.exists) {
+        counter = getdata.data()!["timer"];
+        setState(() {
+          
+        });
+      }
   }
 
   Future<void> splashFunction() async {
@@ -79,40 +96,41 @@ class _MiningSplashState extends State<MiningSplash> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<void>(
-      future: splashFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return AppScaffold(
-            backGroundColor: Appcolors.blue,
-            color: Appcolors.blue,
-            body: Center(
-              child: Image.asset(
-                OnboardingImages.miningSplash,
-                height: MediaQuery.of(context).size.height * 0.1,
-                fit: BoxFit.cover,
-              ),
-            ),
-          );
-        } else {
-          return AppScaffold(
-            backGroundColor: Appcolors.blue,
+    return 
+    // FutureBuilder<void>(
+    //   future: splashFuture,
+      // builder: (context, snapshot) {
+      //   if (snapshot.connectionState == ConnectionState.waiting) {
+      //     return AppScaffold(
+      //       backGroundColor: Appcolors.blue,
+      //       color: Appcolors.blue,
+      //       body: Center(
+      //         child: Image.asset(
+      //           OnboardingImages.miningSplash,
+      //           height: MediaQuery.of(context).size.height * 0.1,
+      //           fit: BoxFit.cover,
+      //         ),
+      //       ),
+      //     );
+      //   } else {
+           AppScaffold(
+            backGroundColor: Appcolors.white,
             color: Appcolors.blue,
             body: Column(
               children: [
                 Row(children: [
-                  Image.asset(MinningImage.icon),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.015),
-                    child: Image.asset(MinningImage.name),
-                  ),
+                  // Image.asset(MinningImage.icon),
+                  // Padding(
+                  //   padding: EdgeInsets.only(
+                  //       top: MediaQuery.of(context).size.height * 0.015),
+                  //   child: Image.asset(MinningImage.name),
+                  // ),
                 ]),
                 Divider(color: Appcolors.white, thickness: 2.sp),
                 Expanded(
                   child: Container(
                     width: MediaQuery.of(context).size.width,
-                    color:Color.fromARGB(255, 7, 115, 255),
+                    color:Colors.white,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -126,10 +144,10 @@ class _MiningSplashState extends State<MiningSplash> {
                               vertical:
                                   MediaQuery.of(context).size.width * 0.04),
                           child: AppText(
-                              color: Appcolors.white,
+                              color: Appcolors.blackColor,
                               text: 'OVERVIEW',
                               size: 25,
-                              fontweight: FontWeight.w600),
+                              fontweight: FontWeight.bold),
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width,
@@ -142,46 +160,62 @@ class _MiningSplashState extends State<MiningSplash> {
                                   MediaQuery.of(context).size.width * 0.03)),
                           child: Image.asset(MinningImage.frame),
                         ),
-                        const SizedBox(
+                         const SizedBox(
                           height: 20,
                         ),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: EdgeInsets.symmetric(
-                              horizontal:
-                                  MediaQuery.of(context).size.width * 0.03),
-                          decoration: BoxDecoration(
-                              color: Appcolors.blue,
-                              borderRadius: BorderRadius.circular(
-                                  MediaQuery.of(context).size.width * 0.03)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              //icon
-                              Image.asset(
-                                HomeImages.logOut,
-                                height:100,
-                                color: Appcolors.white,
-                                // fit: BoxFit.contain,
-                              ),
-                              AppText(
-                                text: 'Start Mining',
-                                color: Appcolors.white,
-                                size: 25.sp,
-                                textalign: TextAlign.center,
-                              ),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              Image.asset(
-                                OnboardingImages.miningSplash,
-                                height: 40.sp,
-                                fit: BoxFit.cover,
-                              ),
+                        // Container(
+                        //   child: Column(
+                        //     children: [
+                        //       Text("ROCKICON"),
+                        //     ],
+                        //   ),
+                        // ),
+                        // const SizedBox(
+                        //   height: 20,
+                        // ),
+                        GestureDetector(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>ShowMiningScreen()));
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: EdgeInsets.symmetric(
+                                horizontal:
+                                    MediaQuery.of(context).size.width * 0.03),
+                            decoration: BoxDecoration(
+                                color: Appcolors.blue,
+                                borderRadius: BorderRadius.circular(
+                                    MediaQuery.of(context).size.width * 0.03)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                //icon
+                                Image.asset(
+                                  HomeImages.logOut,
+                                  height:100,
+                                  color: Appcolors.white,
+                                  // fit: BoxFit.contain,
+                                ),
+                                AppText(
+                                  
+                                  text: 'Start Mining',
+                                  color: Appcolors.white,
+                                  size: 25.sp,
+                                  textalign: TextAlign.center,
+                                ),
                                 const SizedBox(
-                                width: 20,
-                              ),
-                            ],
+                                  width: 20,
+                                ),
+                                Image.asset(
+                                  OnboardingImages.miningSplash,
+                                  height: 40.sp,
+                                  fit: BoxFit.cover,
+                                ),
+                                  const SizedBox(
+                                  width: 20,
+                                ),
+                              ],
+                            ),
                           ),
                         )
                       ],
@@ -192,9 +226,9 @@ class _MiningSplashState extends State<MiningSplash> {
             ),
           );
         }
-      },
-    );
-  }
+    //   },
+    // );
+  // }
 }
 
 class UpdateWallet extends StatelessWidget {

@@ -1,5 +1,6 @@
-// ignore_for_file: sort_child_properties_last
+// ignore_for_file: sort_child_properties_last, prefer_const_constructors
 
+import 'package:clicktwaek/feature/home/data/home_images.dart';
 import 'package:clicktwaek/feature/home/presentration/src/widgets/home_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../home/presentration/pages/home.dart';
 import '../../../home/presentration/src/widgets/navigationDrawer.dart';
+import '../../../minning/data/local/mining_images.dart';
 import '../widgets/widgets.dart';
 
 class BottomNav extends StatefulWidget {
@@ -22,23 +24,9 @@ class BottomNav extends StatefulWidget {
 }
 
 class _BottomNavState extends State<BottomNav> {
-      final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-@override
-      void initState(){
-        super.initState();
-        getData();
+   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-      }
-
-
-      void getData() async {
-    await context.read<OnboardingCubit>().getUserData();
-    userDoc = context.read<OnboardingCubit>().userDoc;
-  }
-
-
-      var userDoc = <String, dynamic>{};
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -47,6 +35,20 @@ class _BottomNavState extends State<BottomNav> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar:AppBar(
+        backgroundColor:
+       watchOnboarding.bottonnavSelectedIndex ==2 ?
+       Color.fromARGB(255, 4, 4, 204):
+         Colors.red,
+        title:  watchOnboarding.bottonnavSelectedIndex !=2 ? Text("ClickTweak"):
+       Center(child: Row(
+         children: [
+          //  Image.asset(MinningImage.icon),
+             Image.asset(MinningImage.name),
+         ],
+       ))
+        ,
+      ),
     
       body: IndexedStack(
         index: watchOnboarding.bottonnavSelectedIndex,

@@ -112,24 +112,112 @@ class HomeProgressIndicator extends StatelessWidget {
   }
 }
 
-class HomeVideo extends StatelessWidget {
-  const HomeVideo({super.key, this.ontap});
+class HomeVideo extends StatefulWidget {
+  var data;
+   HomeVideo({super.key, this.ontap,this.data});
   final Function()? ontap;
+
+  @override
+  State<HomeVideo> createState() => _HomeVideoState();
+}
+
+class _HomeVideoState extends State<HomeVideo> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(widget.data);
+  }
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     return GestureDetector(
-        onTap: ontap,
-        child: Container(
-          width: size.width,
-          height: size.height * 0.25,
-          decoration: BoxDecoration(
-            image: DecorationImage(image: AssetImage(HomeImages.youtubImage)),
-            color: Appcolors.white,
-            // borderRadius: BorderRadius.circular(radius ?? size.width * 0.03)
+  onTap: widget.ontap,
+  child: Container(
+    width: size.width,
+    height: size.height * 0.25,
+    decoration: BoxDecoration(
+      image: DecorationImage(
+        image: NetworkImage(widget.data["poster"]),
+        fit: BoxFit.cover,
+      ),
+    ),
+    child: Stack(
+      children: [
+        // Video Frame
+        Positioned.fill(
+          child: Container(
+            color: Colors.black.withOpacity(0.3), // Adjust opacity as needed
+            child: Center(
+              child: Icon(
+                Icons.play_arrow,
+                color: Colors.white,
+                size: 50.0, // Adjust the size of the play button
+              ),
+            ),
           ),
-          child: Text(''),
-        ));
+        ),
+        // Additional elements can be added on top of the video frame
+      ],
+    ),
+  ),
+);
+
+  }
+}
+
+
+class HomeVideoSellAll extends StatefulWidget {
+  var data;
+   HomeVideoSellAll({super.key, this.ontap,this.data});
+  final Function()? ontap;
+
+  @override
+  State<HomeVideo> createState() => _HomeVideoState();
+}
+
+class _HomeVideoSellAllState extends State<HomeVideo> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(widget.data.data());
+  }
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    return GestureDetector(
+  onTap: widget.ontap,
+  child: Container(
+    width: size.width,
+    height: size.height * 0.25,
+    decoration: BoxDecoration(
+      image: DecorationImage(
+        image: NetworkImage(widget.data.data()["poster"]),
+        fit: BoxFit.cover,
+      ),
+    ),
+    child: Stack(
+      children: [
+        // Video Frame
+        Positioned.fill(
+          child: Container(
+            color: Colors.black.withOpacity(0.3), // Adjust opacity as needed
+            child: Center(
+              child: Icon(
+                Icons.play_arrow,
+                color: Colors.white,
+                size: 50.0, // Adjust the size of the play button
+              ),
+            ),
+          ),
+        ),
+        // Additional elements can be added on top of the video frame
+      ],
+    ),
+  ),
+);
+
   }
 }
 

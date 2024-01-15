@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:clicktwaek/constants/app_button.dart';
 import 'package:clicktwaek/constants/appcolors.dart';
 import 'package:clicktwaek/constants/appscaffold.dart';
@@ -5,6 +7,7 @@ import 'package:clicktwaek/constants/apptext.dart';
 import 'package:clicktwaek/feature/plans/presentation/pages/plans_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Support extends StatelessWidget {
   const Support({super.key});
@@ -36,7 +39,7 @@ class Support extends StatelessWidget {
                           border: OutlineInputBorder(
                               borderSide:
                                   BorderSide(color: Color(0x191B2A3B)))))),
-              SizedBox(height: size.height * 0.28),
+              SizedBox(height: size.height * 0.18),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
                 child: AppButton(
@@ -60,25 +63,55 @@ class Support extends StatelessWidget {
   }
 }
 
-class SuportProfile extends StatelessWidget {
+class SuportProfile extends StatefulWidget {
   const SuportProfile({super.key});
+
+  @override
+  State<SuportProfile> createState() => _SuportProfileState();
+}
+
+class _SuportProfileState extends State<SuportProfile> {
+
+  void initState(){
+    super.initState();
+    getData();
+  }
+  var name ="";
+  var email ="";
+  var image="";
+
+getData() async {
+   var _preferences = await SharedPreferences.getInstance();
+   name = _preferences.getString("name")!;
+   email = _preferences.getString("email")!;
+   image = _preferences.getString("avatar")!;
+   setState(() {
+     
+   });
+
+
+}
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    return Padding(
+    return
+    email!=""?
+     Padding(
       padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
       child: Row(
         children: [
-          CircleAvatar(backgroundColor: Appcolors.redColor, radius: 50),
+          CircleAvatar(
+            backgroundImage : NetworkImage(image.toString()),
+            backgroundColor: Appcolors.redColor, radius: 50),
           SizedBox(width: size.width * 0.03),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const AppText(
-                  text: 'Reem Khaled', size: 14, fontweight: FontWeight.w500),
+               AppText(
+                  text: name.toString(), size: 14, fontweight: FontWeight.w500),
               AppText(
-                  text: 'reem_1993@gmail.com',
+                  text: email.toString(),
                   size: 14,
                   color: Appcolors.blackColor.withOpacity(0.5),
                   fontweight: FontWeight.w500)
@@ -86,6 +119,10 @@ class SuportProfile extends StatelessWidget {
           )
         ],
       ),
-    );
+    ):  Center(
+     child: CircularProgressIndicator(
+       valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
+       strokeWidth: 8.0,
+     ),);
   }
 }

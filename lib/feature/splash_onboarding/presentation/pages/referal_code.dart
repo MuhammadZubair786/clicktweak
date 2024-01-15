@@ -8,8 +8,17 @@ import 'package:clicktwaek/feature/splash_onboarding/presentation/bloc/cubit/onb
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ReferalCodeInput extends StatelessWidget {
+class ReferalCodeInput extends StatefulWidget {
   const ReferalCodeInput({super.key});
+
+  @override
+  State<ReferalCodeInput> createState() => _ReferalCodeInputState();
+}
+
+class _ReferalCodeInputState extends State<ReferalCodeInput> {
+
+  TextEditingController code = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +38,8 @@ class ReferalCodeInput extends StatelessWidget {
                 children: [
                   const AppText(text: 'Enter referral code', size: 16),
                   SizedBox(height: size.height * 0.015),
-                  AppTextField(),
-                  SizedBox(height: size.height * 0.54),
+                  AppTextField(code: code,),
+                  // SizedBox(height: size.height * 0.54),
                   InkWell(
                     onTap: () {
                       Navigator.pushNamedAndRemoveUntil(
@@ -55,7 +64,7 @@ class ReferalCodeInput extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: size.height * 0.015)
+                  // SizedBox(height: size.height * 0.015)
                 ],
               ),
             ))
@@ -65,13 +74,16 @@ class ReferalCodeInput extends StatelessWidget {
 }
 
 class AppTextField extends StatelessWidget {
-  const AppTextField({super.key});
+  var code;
+   AppTextField({super.key,required this.code});
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     return TextField(
+      controller: code,
         decoration: InputDecoration(
+          
             hintText: 'Optional ',
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(size.width * 0.02),

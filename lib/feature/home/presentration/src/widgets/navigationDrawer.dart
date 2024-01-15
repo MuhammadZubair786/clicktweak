@@ -33,6 +33,7 @@ class _NavDrawerState extends State<NavDrawer> {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
+            
             decoration: BoxDecoration(color: Appcolors.redColor),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

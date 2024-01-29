@@ -39,7 +39,7 @@ class _ReferalCodeInputState extends State<ReferalCodeInput> {
                   const AppText(text: 'Enter referral code', size: 16),
                   SizedBox(height: size.height * 0.015),
                   AppTextField(code: code,),
-                  // SizedBox(height: size.height * 0.54),
+                  SizedBox(height: size.height * 0.24),
                   InkWell(
                     onTap: () {
                       Navigator.pushNamedAndRemoveUntil(

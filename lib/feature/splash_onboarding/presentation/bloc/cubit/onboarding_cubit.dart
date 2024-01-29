@@ -230,7 +230,9 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       "Balance":"0",
       "inviteCode":res,
       "planId":"xYhWeeGnYTPe0Dvr6Dmh",
-      "totalEarning":"0"
+      "totalEarning":"0",
+      "Wallet_Address":"",
+      "userId":auth.currentUser!.uid
     });
   }
 
@@ -273,8 +275,10 @@ Future<bool> checkIfCodeExists(String code) async {
           _preferences.setString("inviteCode", userDoc.data()?['inviteCode'] ?? "");
           _preferences.setString("name", userDoc.data()?['name'] ?? "");
           _preferences.setString("planId", userDoc.data()?['planId'] ?? "");
+  _preferences.setString("userId", userDoc.data()?['userId'] ?? "");
           _preferences.setString("totalEarning", userDoc.data()?['totalEarning'] ?? "");
           _preferences.setString("Balance", userDoc.data()?['Balance'] ?? "");
+          _preferences.setString("Wallet_Address", userDoc.data()?['Wallet_Address'] ?? "");
 
         dev.log('User data: ${userDoc.data()}');
       } else {

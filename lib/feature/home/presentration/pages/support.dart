@@ -103,7 +103,7 @@ getData() async {
         children: [
           CircleAvatar(
             backgroundImage : NetworkImage(image.toString()),
-            backgroundColor: Appcolors.redColor, radius: 50),
+            backgroundColor: Appcolors.redColor, radius: 35),
           SizedBox(width: size.width * 0.03),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

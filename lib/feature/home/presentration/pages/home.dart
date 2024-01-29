@@ -119,9 +119,9 @@ class _HomePageState extends State<HomePage> {
               //      widget.scaffoldKey.currentState!.openDrawer()
               //     ,
               //     userDoc: userDoc),
-              SizedBox(height: size.height * 0.005),
+              SizedBox(height: size.height * 0.035),
               const HomeBalance(),
-              SizedBox(height: size.height * 0.005),
+              SizedBox(height: size.height * 0.018),
             videoRes==null?Container():  HomeVideo(
                 data: videoRes,
                 ontap: () async {
@@ -144,45 +144,45 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
               SizedBox(height: size.height * 0.025),
-              _getCodebutton
-                  ? TextButton(
-                      onPressed: () async {
-                        OnboardingCubit onboardingCubit =
-                            context.read<OnboardingCubit>();
-                        if (await onboardingCubit.isCodeValid()) {
-                          var code = await onboardingCubit.getRandomCode();
-                          // Show the success dialog
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return SuccessDialog(
-                                message: code,
-                              );
-                            },
-                          );
-                          setState(() {
-                            _getCodebutton = false;
-                          });
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return FialedDialog(
-                                message: 'Your code is Expire Now',
-                              );
-                            },
-                          );
-                          setState(() {
-                            _getCodebutton = false;
-                          });
-                        }
-                      },
-                      child: Text(
-                        ' ',
-                        style: TextStyle(color: Appcolors.blue),
-                      ))
-                  : SizedBox.shrink(),
-              SizedBox(height: size.height * 0.005),
+              // _getCodebutton
+              //     ? TextButton(
+              //         onPressed: () async {
+              //           OnboardingCubit onboardingCubit =
+              //               context.read<OnboardingCubit>();
+              //           if (await onboardingCubit.isCodeValid()) {
+              //             var code = await onboardingCubit.getRandomCode();
+              //             // Show the success dialog
+              //             showDialog(
+              //               context: context,
+              //               builder: (BuildContext context) {
+              //                 return SuccessDialog(
+              //                   message: code,
+              //                 );
+              //               },
+              //             );
+              //             setState(() {
+              //               _getCodebutton = false;
+              //             });
+              //           } else {
+              //             showDialog(
+              //               context: context,
+              //               builder: (BuildContext context) {
+              //                 return FialedDialog(
+              //                   message: 'Your code is Expire Now',
+              //                 );
+              //               },
+              //             );
+              //             setState(() {
+              //               _getCodebutton = false;
+              //             });
+              //           }
+              //         },
+              //         child: Text(
+              //           ' ',
+              //           style: TextStyle(color: Appcolors.blue),
+              //         ))
+              //     : Container(),
+              // SizedBox(height: size.height * 0.005),
               const HomeProgressIndicator(),
               SizedBox(height: size.height * 0.005),
               const HomePlan(),
@@ -200,7 +200,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.pushNamed(context, RouteName.videoInputCode);
                 },
               ),
-              // SizedBox(height: size.height * 0.07),
+              SizedBox(height: size.height * 0.001),
             ],
           )),
     );

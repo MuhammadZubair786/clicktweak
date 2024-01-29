@@ -41,7 +41,10 @@ class _ShowMiningScreenState extends State<ShowMiningScreen> {
           actions: [
             TextButton(
               onPressed: () {
-               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MiningSplash()));
+            
+              Navigator.pop(context);
+              Navigator.pop(context);
+
               },
               child: Text('OK'),
             ),
@@ -53,16 +56,24 @@ class _ShowMiningScreenState extends State<ShowMiningScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-            backGroundColor: Appcolors.blue,
-            color: Appcolors.blue,
-            body: Center(
-              child: Image.asset(
-                OnboardingImages.miningSplash,
-                height: MediaQuery.of(context).size.height * 0.1,
-                fit: BoxFit.contain,
+    return SafeArea(
+      child: AppScaffold(
+              backGroundColor: Appcolors.blue,
+              color: Color(0xff1C2CBC),
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Image.network(
+                     "https://i.postimg.cc/TPbmqY43/Group-48095498.png",
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ],
               ),
             ),
-          );
+    );
   }
 }

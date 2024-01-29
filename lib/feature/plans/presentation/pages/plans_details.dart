@@ -40,9 +40,10 @@ class _PlansDetailsState extends State<PlansDetails> {
                     text: ' Total to pay \$ ${widget.data["price"].toString()}',
                     size: 20,
                     color: Appcolors.blackColor)),
-            SizedBox(height: size.height * 0.015),
+            SizedBox(height: size.height * 0.010),
              PlanDetailsContainer(data:widget.data),
-            Expanded(child: Container()),
+             SizedBox(height: size.height * 0.26),
+            // Expanded(child: Container()),
             Padding(
               padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: InkWell(
@@ -51,7 +52,7 @@ class _PlansDetailsState extends State<PlansDetails> {
                       barrierDismissible: false,
                       context: context,
                       builder: (context) {
-                        return const PaymentSuccesDialog();
+                        return const PaymentNotSuccesDialog();
                       });
                 },
                 child: Container(
@@ -127,7 +128,7 @@ class _PlanDetailsContainerState extends State<PlanDetailsContainer> {
                 color: Appcolors.white),
             SizedBox(height: size.height * 0.002),
             AppText(
-                text: '\$ ${widget.data["earn_per_video"]}',
+                text: '\$ ${widget.data["earn_per_video"]}/ \$ ${widget.data["total_earn_user"].toString()}',
                 size: 16,
                 fontweight: FontWeight.w700,
                 color: Appcolors.white)
@@ -175,6 +176,60 @@ class AppBarWithArrowAndIcon extends StatelessWidget {
     );
   }
 }
+
+
+class PaymentNotSuccesDialog extends StatelessWidget {
+  const PaymentNotSuccesDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    return AlertDialog(
+      contentPadding: EdgeInsets.zero,
+      content: Container(
+        width: size.width,
+        color: Appcolors.white,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: size.height * 0.025),
+            Image.network("https://i.postimg.cc/G3yPJK6j/TEST.png",
+                width: size.width * 0.9),
+            SizedBox(height: size.height * 0.035),
+            AppText(
+                text: 'Insufficient Balance',
+                size: 20,
+                color: Color(0xffC70404),
+                fontweight: FontWeight.w800),
+            SizedBox(height: size.height * 0.025),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: AppText(
+                  textalign: TextAlign.center,
+                  text: 'Your request cannot be processed due to insufficient  balance',
+                  size: 20,
+                  color: Appcolors.blackColor,),
+            ),
+            SizedBox(height: size.height * 0.035),
+            AppButton(
+              width: size.width * 0.65,
+              height: size.height * 0.05,
+              child: AppText(
+                  text: 'Ok, Thanks!',
+                  size: 14,
+                  fontweight: FontWeight.w800,
+                  color: Appcolors.yellow),
+              ontap: () => Navigator.pushNamedAndRemoveUntil(
+                  context, RouteName.bottomnav, (route) => false),
+            ),
+            SizedBox(height: size.height * 0.025),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 class PaymentSuccesDialog extends StatelessWidget {
   const PaymentSuccesDialog({super.key});

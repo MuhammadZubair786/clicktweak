@@ -17,7 +17,7 @@
         </intent>
     </queries>
     <application
-        android:label="clicktwaek"
+        android:label="Clicktweak"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

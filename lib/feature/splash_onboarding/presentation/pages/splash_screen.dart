@@ -61,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen> {
               SizedBox(height: size.height * 0.035),
               const AppText(
                   textalign: TextAlign.center,
-                  text: 'ClickTweak',
+                  text: 'ClickTwaek',
                   size: 16,
                   fontweight: FontWeight.w900)
             ],

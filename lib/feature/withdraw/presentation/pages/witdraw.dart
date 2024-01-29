@@ -10,33 +10,79 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../home/data/home_images.dart';
 
 class Withdraw extends StatelessWidget {
-  const Withdraw({super.key});
+  const Withdraw({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final withdrawFilter = context.watch<WithdrawCubit>().withdrawFilter;
     final size = MediaQuery.sizeOf(context);
-    return AppScaffold(
+
+    return DefaultTabController(
+      length: 2, // Number of tabs
+      child: AppScaffold(
         backGroundColor: Appcolors.white,
         color: Appcolors.redColor,
+
         body: Column(
           children: [
-            const WithdrawAppbar(),
-            // SizedBox(height: size.height * 0.05),
-            withdrawFilter == 'Withdraw'
-                ? Column(
+            // const WithdrawAppbar(),
+            // SizedBox(height: size.height * 0.02), // Adjust the spacing as needed
+           Container(
+              color: Colors.red,
+              child: TabBar(
+              
+              indicatorColor: Appcolors.yellow,
+                labelColor: Appcolors.white,
+                  labelStyle: TextStyle(
+                fontSize: 18.0, // Adjust the font size as needed
+                fontWeight: FontWeight.bold, // Adjust the font weight as needed
+              ),
+                unselectedLabelColor: const Color(0xFFC9C9C9),
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicatorWeight:5,
+              
+             
+                tabs: [
+                  Tab(height: 50,child: Container(
+                    child: Row(
+                      children: [
+                        Icon(  Icons.refresh,),
+                        Text("Withdraw")
+                      ],
+                    ),
+                  ),), // First tab
+                  Tab(
+                  child: Container(
+                    child: Row(
+                      children: [
+                        Icon(  Icons.refresh,),
+                        Text("Transactions")
+                      ],
+                    ),
+                  ),
+                  ), // Second tab
+                ],
+              // Change the label text color as needed
+              ),
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  // Content for the 'Withdraw' tab
+                  Column(
                     children: [
-                      // SizedBox(height: size.height * 0.015),
                       const WithrawBalance(),
                     ],
-                  )
-                : const AllTransactions()
-
-            //
-            //
-            // WithdrawEmpty()
+                  ),
+                  // Content for the 'Transactions' tab
+                  const AllTransactions(),
+                ],
+              ),
+            ),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }
 
@@ -243,17 +289,39 @@ class _WithrawBalanceState extends State<WithrawBalance> {
               ],
             ),
             SizedBox(height: size.height * 0.05),
-            Padding(
-                padding: EdgeInsets.symmetric(horizontal: size.width * 0.06,),
-                child: AppButton(
-                  buttoncolor: Colors.amber,
-                    child: AppText(
-                    
-                        text: 'Withdraw ',
-                        size: 16,
-                        color: Colors.white,
-                        fontweight: FontWeight.w500,
-                        ))),
+            GestureDetector(
+              onTap: (){
+                showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+  title: Text('Insufficient Balance'),
+  content: Text('Please ensure your account has the necessary balance and try again.'),
+  actions: [
+    TextButton(
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      child: Text('OK'),
+    ),
+  ],
+);
+      },
+    );
+
+              },
+              child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.06,),
+                  child: AppButton(
+                    buttoncolor: Colors.amber,
+                      child: AppText(
+                      
+                          text: 'Withdraw ',
+                          size: 16,
+                          color: Colors.white,
+                          fontweight: FontWeight.w500,
+                          ))),
+            ),
             SizedBox(height: size.height * 0.05),
           ],
         ),

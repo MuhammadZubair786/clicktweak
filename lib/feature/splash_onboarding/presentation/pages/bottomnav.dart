@@ -1,4 +1,4 @@
-// ignore_for_file: sort_child_properties_last, prefer_const_constructors
+// ignore_for_file: sort_child_properties_last, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:clicktwaek/feature/home/data/home_images.dart';
 import 'package:clicktwaek/feature/home/presentration/src/widgets/home_widget.dart';
@@ -41,14 +41,16 @@ class _BottomNavState extends State<BottomNav> {
        Color.fromARGB(255, 4, 4, 204):
          Colors.red,
         title:  watchOnboarding.bottonnavSelectedIndex !=2 ? Text("ClickTweak"):
-       Center(child: Row(
-         children: [
-          //  Image.asset(MinningImage.icon),
-             Image.asset(MinningImage.name),
-         ],
-       ))
-        ,
-      ),
+       Center(child: 
+       Row(
+                            children: [
+                              Text("ROCKI",style: TextStyle(color: Colors.white,fontSize: 28,fontWeight: FontWeight.w900),),
+                              Text("POINT",style: TextStyle(color: Color(0XFF058f88),fontSize: 28,fontWeight: FontWeight.w900)),
+
+                            ],
+
+                          ),
+       )),
     
       body: IndexedStack(
         index: watchOnboarding.bottonnavSelectedIndex,

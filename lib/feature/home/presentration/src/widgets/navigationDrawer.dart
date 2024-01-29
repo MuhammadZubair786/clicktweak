@@ -1,5 +1,7 @@
+import 'package:clicktwaek/feature/home/data/No_Depoist.dart';
 import 'package:clicktwaek/feature/home/data/home_images.dart';
 import 'package:clicktwaek/feature/home/presentration/src/home_exports.dart';
+import 'package:clicktwaek/feature/home/presentration/src/widgets/CommunityScreen.dart';
 import 'package:clicktwaek/feature/minning/presentation/pages/miningSplash.dart';
 import 'package:clicktwaek/feature/plans/presentation/pages/plans.dart';
 import 'package:clicktwaek/feature/plans/presentation/pages/plans_details.dart';
@@ -21,6 +23,7 @@ class NavDrawer extends StatefulWidget {
 }
 
 class _NavDrawerState extends State<NavDrawer> {
+   late OnboardingCubit readOnboarding;
    final String url = "https://chat.whatsapp.com/Gwq6wm8uiQ2H0T4SYmvtt3";
   @override
   Widget build(BuildContext context) {
@@ -52,7 +55,7 @@ class _NavDrawerState extends State<NavDrawer> {
           ),
           GestureDetector(
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>Withdraw()));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>NoDepoist()));
             },
             child: SideBarInfo(
                 icon: Image.asset(HomeImages.deposite, height: 25.sp),
@@ -66,47 +69,49 @@ class _NavDrawerState extends State<NavDrawer> {
                 icon: Image.asset(HomeImages.plans, height: 25.sp),
                 title: 'Plans'),
           ),
-          GestureDetector(
-            onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>MiningSplash()));
-            },
-            child: SideBarInfo(
-                icon: Image.asset(HomeImages.mining, height: 25.sp),
-                title: 'Mining'),
-          ),
+          // GestureDetector(
+          //   onTap: (){
+          //       Navigator.push(context, MaterialPageRoute(builder: (context)=>MiningSplash()));
+          //       //  context.read<OnboardingCubit>().changebottomnavindex(index: 0);
+          //   },
+          //   child: SideBarInfo(
+          //       icon: Image.asset(HomeImages.mining, height: 25.sp),
+          //       title: 'Mining'),
+          // ),
           SideBarInfo(
               icon: Image.asset(HomeImages.support, height: 25.sp),
               title: 'Support',
               ontap: () => Navigator.pushNamed(context, RouteName.support)),
           Divider(color: Appcolors.blackColor),
           const AppText(
-              text: 'Settings', size: 14, fontweight: FontWeight.w500),
+              text: '  Settings', size: 14, fontweight: FontWeight.w500),
           SideBarInfo(
               icon: Image.asset(HomeImages.language, height: 25.sp),
               title: 'Language '),
           Divider(color: Appcolors.blackColor),
           const AppText(
           
-              text: 'Communicate ', size: 14, fontweight: FontWeight.w500),
+              text: '  Communicate ', size: 14, fontweight: FontWeight.w500),
           SideBarInfo(
               icon: Icon(Icons.person_add_alt_1, size: 25.sp),
               title: 'Invite friends',
               ontap: () => Navigator.pushNamed(context, RouteName.refer)),
           SideBarInfo(
             ontap: () async {
-          if (await canLaunch(url)) {
-            await launch(url);
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Could not launch $url')),
-            );
-          }
+              Navigator.push(context, MaterialPageRoute(builder: (conext)=>CommunityScreen()));
+          // if (await canLaunch(url)) {
+          //   await launch(url);
+          // } else {
+          //   ScaffoldMessenger.of(context).showSnackBar(
+          //     SnackBar(content: Text('Could not launch $url')),
+          //   );
+          // }
         },
               icon: Icon(Icons.people_alt, size: 25.sp), title: 'Community '),
           SideBarInfo(
               icon: Icon(Icons.star_rounded, size: 25.sp), title: 'Rate us '),
           Divider(color: Appcolors.blackColor),
-          const AppText(text: 'Account', size: 14, fontweight: FontWeight.w500),
+          const AppText(text: '  Account', size: 14, fontweight: FontWeight.w500),
           SideBarInfo(
             ontap: () {
               context.read<OnboardingCubit>().signOut().then((value) {

@@ -162,12 +162,13 @@ class _YourPlansState extends State<YourPlans> {
               ),
 
              
-              height: MediaQuery.of(context).size.height*0.18,
+              height: MediaQuery.of(context).size.height*0.20,
               child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      SizedBox(height: 10,),
                       AppText(
                           text: '${userPlan["title"].toString()}',
                           size: 16,
@@ -187,16 +188,21 @@ class _YourPlansState extends State<YourPlans> {
                           color: Color(0xFFB9B9B9)),
                       SizedBox(height: size.height * 0.002),
                       const AppText(
-                          text: 'Earnings per day',
+                          text: 'Earnings per video',
                           size: 16,
                           fontweight: FontWeight.w700,
                           color: Color(0xFFB9B9B9)),
                       SizedBox(height: size.height * 0.002),
                       AppText(
-                          text: '\$ ${userPlan["earn_per_video"].toString()}',
+                          text: '\$ ${userPlan["earn_per_video"].toString()+" "}',
                           size: 16,
                           fontweight: FontWeight.w700,
-                          color: Color(0xFFB9B9B9))
+                          color: Color(0xFFB9B9B9)),
+                          //    AppText(
+                          // text: '\$ 10',
+                          // size: 16,
+                          // fontweight: FontWeight.w700,
+                          // color: Color(0xFFB9B9B9))
                     ]),
                     // Column(
                     //   children: [

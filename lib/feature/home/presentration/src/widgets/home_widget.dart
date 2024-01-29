@@ -99,7 +99,7 @@ class HomeProgressIndicator extends StatelessWidget {
             backgroundColor: bgColor ?? Appcolors.redColor,
           ),
           Text(
-            '0 to 4',
+            '0 of 4',
             style: TextStyle(
               color: Appcolors.yellow, // Set text color as needed
               fontSize: 16.0, // Set font size as needed
@@ -269,7 +269,7 @@ getData() async {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: size.height * 0.015),
+              SizedBox(height: size.height * 0.020),
               Image.asset(HomeImages.wlogo),
               SizedBox(height: size.height * 0.015),
               AppText(

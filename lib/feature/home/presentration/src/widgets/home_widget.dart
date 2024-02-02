@@ -238,13 +238,17 @@ void initState(){
 }
 
 var Earn = "0";
-var Balance = "0";
+var Balance;
 
 
 getData() async {
     var _preferences = await SharedPreferences.getInstance();
      Earn =   _preferences.getString("totalEarning")!;
-      Balance=    _preferences.getString("Balance")!;
+     double? balanceDouble = _preferences.getDouble("Balance");
+ Balance = balanceDouble?.toString() ?? '0.0';
+setState(() {
+  
+});
 
           
 }
@@ -280,7 +284,7 @@ getData() async {
               ),
                AppText(
                 size: 32,
-                text: ' \$${Balance.toString()}',
+                text: ' \$${Balance}',
                 fontweight: FontWeight.w800,
                 color: Appcolors.white,
               ),

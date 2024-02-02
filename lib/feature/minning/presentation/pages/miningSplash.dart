@@ -81,7 +81,7 @@ class _MiningSplashState extends State<MiningSplash> {
         .collection('Counter_Mining')
         .doc("j1a3RD3hlewYXpoKmdES")
         .update({"timer": counter.toString()});
-    setState(() {});
+    // setState(() {});
   }
 
   Future<void> splashFunction() async {

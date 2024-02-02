@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'package:clicktwaek/constants/export.dart';
 import 'package:clicktwaek/feature/plans/presentation/pages/plans_details.dart';
@@ -18,6 +18,16 @@ class VideoCode extends StatefulWidget {
 
 class _VideoCodeState extends State<VideoCode> {
   TextEditingController code = TextEditingController();
+
+  void initState() {
+    super.initState();
+    // checkData();
+  }
+
+  checkCodeData() async {
+    var data = await OnboardingCubit().checkAndStoreVideoCode(code.text.toString());
+    return data;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,10 +67,9 @@ class _VideoCodeState extends State<VideoCode> {
                           return AlertDialog(
                             title: Center(child: Text('Empty Data')),
                             content: Padding(
-                              padding: const EdgeInsets.only(left:30.0,right:30),
-                              child: Text(
-                                
-                                  '     Enter Video Code'),
+                              padding:
+                                  const EdgeInsets.only(left: 30.0, right: 30),
+                              child: Text('     Enter Video Code'),
                             ),
                             actions: [
                               TextButton(
@@ -74,23 +83,45 @@ class _VideoCodeState extends State<VideoCode> {
                         },
                       );
                     }
-                    else if (await onboardingCubit.isCodeValid()) {
-                      // Show the success dialog
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return SuccessDialog();
-                        },
-                      );
-                    } else {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return FialedDialog(
-                            message: 'Your code is Invalid',
-                          );
-                        },
-                      );
+                    // else if (await onboardingCubit.isCodeValid()) {
+                    //   // Show the success dialog
+                    //   showDialog(
+                    //     context: context,
+                    //     builder: (BuildContext context) {
+                    //       return SuccessDialog();
+                    //     },
+                    //   );
+                    // }
+                    else {
+                      var res =await  checkCodeData();
+                      if (res["user"]==false && res["validate"]==true) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return SuccessDialog();
+                          },
+                        );
+                      }
+                      else if(res["validate"]==false){
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return FialedDialog(
+                              message: 'Your code is Invalid',
+                            );
+                          },
+                        );
+                      }
+                       else {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return FialedDialog(
+                              message: 'You Already use this code \n And Earn',
+                            );
+                          },
+                        );
+                      }
                     }
                   },
                   child: Container(
@@ -234,6 +265,6 @@ class FialedDialog extends StatelessWidget {
 //   @override
 //   Widget build(BuildContext context) {
 //     final size = MediaQuery.sizeOf(context);
-//     return 
+//     return
 //   }
 // }

@@ -22,9 +22,7 @@ class Plans extends StatefulWidget {
 }
 
 class _PlansState extends State<Plans> {
-  GlobalKey<ScaffoldState> scaffolKey = GlobalKey<ScaffoldState>();
-  late final InterstitialAd interstitialAd;
-  final String interstitialAdUnitId = 'ca-app-pub-3940256099942544/1033173712';
+
 
   @override
   void initState() {
